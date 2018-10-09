@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 	<style>
 		body {
 			background: #F1F3FA;
@@ -202,12 +203,12 @@
 							<i class="glyphicon glyphicon-home"></i>
 							Overview </a>
 						</li>
-						<li class="active">
+						<li>
 							<a href="#">
 							<i class="glyphicon glyphicon-cutlery"></i>
 							Meal history </a>
 						</li>
-						<li>
+						<li class="active">
 							<a href="#" target="_blank">
 							<i class="glyphicon glyphicon-ok"></i>
 							 Report</a>
@@ -220,54 +221,79 @@
 					</ul>
 				</div>
 				<!-- END MENU -->
-		  </div>
+			</div>
 		</div>
 		<div class="col-md-9">
             <div class="profile-content">
-			   	<div class="topnav">
-  					<a class="active" href="#home">Today</a>
-  					<a href="#about">This week</a>
-  					<input type="text" name="daterange" value="09/20/2015 - 09/20/2015" />
+				<!--  content start here  -->
+				<div class="row">
+					<div class="col-md-12">
+						<h3>For past 7 days user has:</h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<p>Eat 19 out of 21 Meals</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<canvas id="calchart"></canvas>
+					</div>
+					<div class="col-md-6">
+						<canvas id="carbchart"></canvas>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<canvas id="prochart"></canvas>
+					</div>
+					<div class="col-md-6">
+						<canvas id="fatchart"></canvas>
+					</div>
+				</div>
+				
+				<!--
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%">
+						70
+					</div>
+				</div>
+-->
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<p>Take 20 out of 14 Medicine dosages</p>
+					</div>
 				</div>
 				<table class="table table-hover">
 				<thead>
 					<tr>
 						<th>Date</th>
 						<th>Time</th>
-						<th>Activity</th>
+						<th>Medicine</th>
 				  	</tr>
 				</thead>
 					<tbody>
 				  		<tr>
-							<td>20/9/2015</td>
-							<td>09:00</td>
-							<td>Eat Khao mun kai</td>
+							<td>19/9/2015</td>
+							<td>After dinner</td>
+							<td>Amoxicillin </td>
 				  		</tr>
 				  		<tr>
 							<td>20/9/2015</td>
-							<td>10:00</td>
-							<td>Take Penicillin</td>
+							<td>After dinner</td>
+							<td>Amoxicillin </td>
 				  		</tr>
-				  		<tr>
-							<td>20/9/2015</td>
-							<td>13:00</td>
-							<td>Eat Tom yum, and roasted pork and rice</td>
-				  		</tr>
-						<tr>
-							<td>20/9/2015</td>
-							<td>18:00</td>
-							<td>Eat Fried noodle</td>
-				  		</tr>
-						
+				  		
 					</tbody>
 			  	</table>
-				
-            </div>
+				<!--  content end here  -->
+			</div>
 		</div>
 	</div>
-  <div class="row">
-    <div class="col-lg-6">&nbsp;</div>
-</div>
+	
 </div>
 <br>
 <br>
@@ -280,5 +306,89 @@ $(function() {
   }, function(start, end, label) {
     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
   });
+});
+</script>
+<script>
+var ctx = document.getElementById('calchart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [{
+            label: "Calorie",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [1900, 2600, 1800, 1978, 2154, 1898, 2236],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+<script>
+var ctx = document.getElementById('carbchart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [{
+            label: "Carbohydrate(gram)",
+            backgroundColor: 'rgb(196, 255, 77)',
+            borderColor: 'rgb(196, 255, 77)',
+            data: [140, 154, 168, 159, 148, 155, 134],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+<script>
+var ctx = document.getElementById('prochart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [{
+            label: "Protein(gram)",
+            backgroundColor: 'rgb(255, 51, 51)',
+            borderColor: 'rgb(255, 51, 51)',
+            data: [58, 61, 87, 73, 90, 68, 78],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+<script>
+var ctx = document.getElementById('fatchart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [{
+            label: "Fat ",
+            backgroundColor: 'rgb(255, 219, 77)',
+            borderColor: 'rgb(255, 219, 77)',
+            data: [44, 58, 39, 67, 51, 71, 49],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
 });
 </script>
