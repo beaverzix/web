@@ -17,12 +17,10 @@
 		body {
 			background: #F1F3FA;
 		}
-
         /* Profile container */
 		.profile {
 			margin: 20px 0;
 		}
-
         /* Profile sidebar */
 		.profile-sidebar {
 			padding: 20px 0 10px 0;
@@ -145,19 +143,19 @@
 			font-size: 17px;
         }
 
-			/* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
+		/* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 		@media screen and (max-width: 600px) {
-			.topnav a, .topnav input[type=text] {
-				float: none;
-				display: block;
-				text-align: left;
-				width: 100%;
-				margin: 0;
-				padding: 14px;
-			}
-			.topnav input[type=text] {
-				border: 1px solid #ccc;
-			}
+		    .topnav a, .topnav input[type=text] {
+			    float: none;
+			    display: block;
+			    text-align: left;
+			    width: 100%;
+			    margin: 0;
+			    padding: 14px;
+		    }
+		    .topnav input[type=text] {
+			    border: 1px solid #ccc;
+		    }
 		}
 		.back-to-top {
 			cursor: pointer;
@@ -206,12 +204,12 @@
 				<!-- SIDEBAR MENU -->
 				<div class="profile-usermenu">
 					<ul class="nav">
-						<li class="active">
+						<li>
 							<a href="overview.php">
 							<i class="glyphicon glyphicon-home"></i>
 							Overview </a>
 						</li>
-						<li>
+						<li class="active">
 							<a href="meal_history.php">
 							<i class="glyphicon glyphicon-cutlery"></i>
 							Meal history </a>
@@ -233,147 +231,91 @@
 		</div>
 		<div class="col-md-9">
             <div class="profile-content">
-				<div class="row">
-					<div class="col-md-12">
-						<h4 class="text-info">User's Info</h4>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6"> 
-						<label>Name</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["name"] . " " . $row["surname"];
+			   	<div class="topnav">
+                    <form action="" method="POST">
+                        From: <input type="date" name="fromday"> to <input type="date" name="today">
+                        <input type="submit" name="submit" class="btn btn-primary" value="submit"> 
+                        <!--<input type="text" name="daterange" value="09/20/2015 - 09/20/2015"/>-->
+                    </form>
+                    
+                </div>
+                <?php
+                    if(isset($_POST['fromday']) and $_POST['today'] ){
+                        $fromday = $_POST['fromday'];
+                        $today = $_POST['today'];
+                    
+                    //echo strcmp($_POST['fromday'],$_POST['today']); //-1 correct form 0 sameday 1 invalid
+                    $his_sql = "SELECT * FROM `history` WHERE `date` BETWEEN '". $_POST['fromday']."' AND '". $_POST['today']."' ";
+                    $his_result= $conn->query($his_sql);
+                ?>
+                <?php if ($his_result->num_rows == 0): ?>
+                <p>no result</p>
+                <?php else : ?>  
+				<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Time</th>
+						<th>Activity</th>
+				  	</tr>
+				</thead>
+					<tbody>
+                        <?php
+                            while($his_row = $his_result->fetch_assoc()){
                             ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Phone</label>
-					</div>
-					<div class="col-md-6">
-						<p>
+                            <tr>
+                                <td><?php echo $his_row["date"]?></td>
+                                <td><?php echo $his_row["time"]?></td>
+                                <td>
+                                    <?php 
+                                        if(!empty($his_row["nutrition_id"])){
+                                            $nut_sql = "SELECT * FROM `nutrition` WHERE `nutrition_id` = '".$his_row["nutrition_id"]."' ";
+                                            $nut_result= $conn->query($nut_sql);
+                                            $print_row = $nut_result->fetch_assoc();
+                                            echo "Eat ".$print_row['name'];
+                                        }
+                                        else{
+                                            $med_sql = "SELECT * FROM `med` WHERE `med_id` = '".$his_row["med_id"]."' ";
+                                            $med_result= $conn->query($med_sql);
+                                            $print_row = $med_result->fetch_assoc();
+                                            echo "Take ".$print_row['name'];
+                                        }
+                                        ?>
+                                </td>
+                              </tr>
                             <?php
-                                echo $row["tel"];
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Email</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["email"];
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Height</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["height"]. " cm";
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Weight</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["weight"]." kg";
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Blood group</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["blood"];
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Birth Date</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["birth"];
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<h4 class="text-info">Guardian's Info</h4>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6"> 
-						<label>Name</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["g_name"]." ".$row["g_surname"];
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Phone</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-                                echo $row["g_tel"];
-                            ?>
-                        </p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Email</label>
-					</div>
-					<div class="col-md-6">
-						<p>
-                            <?php
-								echo $row["g_email"];
-                            ?>
-                        </p>
-					</div>
-				</div>
-			</div>
-		</div>
+                            }
+                        ?>
+				  		
+                    </tbody>
+                </table>
+                <?php endif ?>
+                <?php } ?>
+                  
+				
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-		
             &nbsp;
         </div>
     </div>
 </div>
 <br>
 <br>
+
+
+<script>
+$(function() {
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    
+  });
+});
+</script>
+
 </body>
 </html>

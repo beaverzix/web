@@ -1,5 +1,5 @@
 <?php session_start();?>
-
+<?php header('Content-Type: charset=utf-8'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,10 +22,17 @@
             {
                 $username = mysqli_real_escape_string($conn,$_POST['email']);
                 $password = mysqli_real_escape_string($conn,$_POST['pwd']);
-                //$sql = "SELECT * FROM 'u_account' WHERE 'email' = '".$username."' AND 'password' = '".$password."'";
-                $sql = "SELECT * FROM 'u_account'";
+                $sql = "SELECT * FROM `u_account` WHERE `email` = '".$username."' AND `password` = '".$password."'";
                 $result= $conn->query($sql);
-                
+                if ($result->num_rows == 1) {
+                    $row = $result->fetch_assoc();
+                    echo "id: " . $row["u_id"]. " - Name: " . $row["name"]. " " . $row["surname"]. "<br>";  
+                    $_SESSION["user_id"] = $row["u_id"];
+                    unset($_SESSION['login_flag']);
+                    header("location: overview.php");
+                } else {
+                    $login_status="email or password is incorrect";
+                }
             }
         ?>
         <div class="col-md-3"></div>
@@ -34,6 +41,11 @@
                 <form action="" method="POST">
                     <div class="panel-heading">login</div>
                     <div class="panel-body">
+                        <?php
+                            if(isset($_SESSION['login_flag']) and $_SESSION['login_flag']==2){
+                                //echo $login_status;
+                            }
+                        ?>
                         <div class="form-group">
                             <label for="email">Email address:</label>
                             <input type="email" class="form-control" name="email">
@@ -43,17 +55,20 @@
                             <input type="password" class="form-control" name="pwd">
                         </div>                </div>
                     <div class="panel-footer">
-                        <input type="submit" name="submit" class="btn btn-success btn-block" value="login"> 
+                        <input type="submit" name="submit" class="btn btn-success btn-block" value="login" onclick="myFunction()"> 
                     </div>
                 </form>
             </div>
         </div>
-        <div class="col-md-3">
-        <?php
-            echo $result;
-        ?>
-        </div>
+        <div class="col-md-3"></div>
     </div>
     
+<script>
+    function myFunction() {
+        <?php
+            $_SESSION['login_flag']=2;
+        ?>
+    }
+</script>
 </body>
 </html>
